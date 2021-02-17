@@ -1,21 +1,21 @@
-# Based on https://github.com/ttroy50/cmake-examples/tree/master/02-sub-projects/A-basic
-# https://cliutils.gitlab.io/modern-cmake/
 cmake_minimum_required(VERSION 3.15)
+
+# Hunter package configuration
+include(cmake/HunterPackages.cmake)
 
 project(LLVMCMakeTemplate)
 
 # Enable solution folder support
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# Append the CMake module search path so we can use our own modules
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
-
 # Require c++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # LLVM wrapper
-include(LLVM)
+set(CMAKE_FOLDER "Dependencies/LLVM")
+include(cmake/LLVM.cmake)
+unset(CMAKE_FOLDER)
 
 # MSVC-specific options
 if(MSVC)
