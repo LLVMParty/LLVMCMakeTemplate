@@ -14,9 +14,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # LLVM wrapper
-set(CMAKE_FOLDER "LLVM")
 include(cmake/LLVM.cmake)
-unset(CMAKE_FOLDER)
 
 # MSVC-specific options
 if(MSVC)
