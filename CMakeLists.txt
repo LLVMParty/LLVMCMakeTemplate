@@ -2,9 +2,18 @@
 cmake_minimum_required(VERSION 3.15)
 
 # Hunter package configuration
-include(cmake/HunterPackages.cmake)
+include("cmake/HunterGate.cmake")
+HunterGate(
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.224.tar.gz"
+    SHA1 "18e57a43efc435f2e1dae1291e82e42afbf940be"
+    LOCAL
+    #FILEPATH "${CMAKE_CURRENT_LIST_DIR}/cmake/Hunter/config.cmake"
+)
+#include(cmake/HunterPackages.cmake)
 
 project(LLVMCMakeTemplate)
+
+hunter_add_package(LLVM)
 
 # Enable solution folder support
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
