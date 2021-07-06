@@ -16,6 +16,8 @@ Windows Registry Editor Version 5.00
 "LongPathsEnabled"=dword:00000001
 ```
 
+You will then need to reboot your machine for the changes to take effect.
+
 ## Building
 
 ```bash
