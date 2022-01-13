@@ -25,9 +25,9 @@ message(STATUS "LLVM definitions: ${LLVM_DEFINITIONS}")
 message(STATUS "LLVM tools: ${LLVM_TOOLS_BINARY_DIR}")
 
 add_library(LLVM INTERFACE)
-target_include_directories(LLVM SYSTEM INTERFACE ${LLVM_INCLUDE_DIRS})
-target_link_libraries(LLVM INTERFACE ${LLVM_AVAILABLE_LIBS})
-target_compile_definitions(LLVM INTERFACE ${LLVM_DEFINITIONS} -DNOMINMAX)
+target_include_directories(LLVM-Wrapper SYSTEM INTERFACE ${LLVM_INCLUDE_DIRS})
+target_link_libraries(LLVM-Wrapper INTERFACE ${LLVM_AVAILABLE_LIBS})
+target_compile_definitions(LLVM-Wrapper INTERFACE ${LLVM_DEFINITIONS} -DNOMINMAX)
 
 set(CMAKE_FOLDER "${CMAKE_FOLDER_LLVM}")
 unset(CMAKE_FOLDER_LLVM)
