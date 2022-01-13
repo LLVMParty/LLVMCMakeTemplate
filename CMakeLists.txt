@@ -36,7 +36,7 @@ add_executable(${PROJECT_NAME}
     src/example.cpp
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    LLVM
+    LLVM-Wrapper
 )
 
 # Set the main project as the startup project
