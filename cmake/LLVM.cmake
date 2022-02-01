@@ -1,5 +1,5 @@
 # This is an INTERFACE target for LLVM, usage:
-#   target_link_libraries(${PROJECT_NAME} <PRIVATE|PUBLIC|INTERFACE> LLVM)
+#   target_link_libraries(${PROJECT_NAME} <PRIVATE|PUBLIC|INTERFACE> LLVM-Wrapper)
 # The include directories and compile definitions will be properly handled.
 
 set(CMAKE_FOLDER_LLVM "${CMAKE_FOLDER}")
