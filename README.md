@@ -21,7 +21,7 @@ You will then need to reboot your machine for the changes to take effect.
 ## Building
 
 ```bash
-mkdir build && cd build
-cmake ..
+cmake -B build
+cmake --build build
 ```
 
