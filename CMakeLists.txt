@@ -1,6 +1,12 @@
 # Needed for CMAKE_MSVC_RUNTIME_LIBRARY
 cmake_minimum_required(VERSION 3.15)
 
+# https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
+# Require out-of-source builds
+if(EXISTS "${PROJECT_BINARY_DIR}/CMakeLists.txt")
+    message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Run cmake -Bbuild instead. Feel free to remove CMakeCache.txt and CMakeFiles.")
+endif()
+
 # Hunter package configuration
 include(cmake/HunterPackages.cmake)
 
