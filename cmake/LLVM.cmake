@@ -24,10 +24,20 @@ message(STATUS "LLVM includes: ${LLVM_INCLUDE_DIRS}")
 message(STATUS "LLVM definitions: ${LLVM_DEFINITIONS}")
 message(STATUS "LLVM tools: ${LLVM_TOOLS_BINARY_DIR}")
 
-add_library(LLVM INTERFACE)
+add_library(LLVM-Wrapper INTERFACE)
 target_include_directories(LLVM-Wrapper SYSTEM INTERFACE ${LLVM_INCLUDE_DIRS})
-target_link_libraries(LLVM-Wrapper INTERFACE ${LLVM_AVAILABLE_LIBS})
-target_compile_definitions(LLVM-Wrapper INTERFACE ${LLVM_DEFINITIONS} -DNOMINMAX)
+target_compile_definitions(LLVM-Wrapper INTERFACE ${LLVM_DEFINITIONS})
+
+if(WIN32)
+    target_compile_definitions(LLVM-Wrapper INTERFACE NOMINMAX)
+endif()
+
+# https://github.com/JonathanSalwan/Triton/issues/1082#issuecomment-1030826696
+if(LLVM_LINK_LLVM_DYLIB)
+    target_link_libraries(LLVM-Wrapper INTERFACE LLVM)
+else()
+    target_link_libraries(LLVM-Wrapper INTERFACE ${LLVM_AVAILABLE_LIBS})
+endif()
 
 set(CMAKE_FOLDER "${CMAKE_FOLDER_LLVM}")
 unset(CMAKE_FOLDER_LLVM)
