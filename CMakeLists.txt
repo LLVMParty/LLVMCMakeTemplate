@@ -8,7 +8,10 @@ if(EXISTS "${PROJECT_BINARY_DIR}/CMakeLists.txt")
 endif()
 
 # Hunter package configuration
-include(cmake/HunterPackages.cmake)
+option(HUNTER_ENABLED "Enable the hunter package manager to automatically download and compile LLVM" ON)
+if(HUNTER_ENABLED)
+    include(cmake/HunterPackages.cmake)
+endif()
 
 project(LLVMCMakeTemplate)
 
@@ -38,12 +41,12 @@ if(MSVC)
     endif()
 endif()
 
-add_executable(${PROJECT_NAME}
+add_executable(example
     src/example.cpp
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE
+target_link_libraries(example PRIVATE
     LLVM-Wrapper
 )
 
 # Set the main project as the startup project
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT example)
