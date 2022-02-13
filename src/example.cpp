@@ -1,52 +1,75 @@
-#include <llvm/IR/Module.h>
-#include <llvm/IR/AssemblyAnnotationWriter.h>
-#include <llvm/IRReader/IRReader.h>
-#include <llvm/Bitcode/BitcodeReader.h>
-#include <llvm/Support/SourceMgr.h>
+#include <cstdlib>
+
 #include <llvm/Support/raw_ostream.h>
 #include <llvm/Support/FormattedStream.h>
+#include <llvm/Support/SourceMgr.h>
+#include <llvm/Support/ToolOutputFile.h>
+#include <llvm/Support/FileSystem.h>
+#include <llvm/IRReader/IRReader.h>
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/Bitcode/BitcodeWriter.h>
 
-#include <iostream>
-#include <fstream>
+using namespace llvm;
 
-static std::unique_ptr<llvm::Module> load_module(llvm::LLVMContext& context, const std::string& bitcode)
+static void ProcessModule(Module& M)
 {
-    llvm::SMDiagnostic error;
-    llvm::StringRef sr(bitcode.data(), bitcode.size());
-    auto buf = llvm::MemoryBuffer::getMemBuffer(sr, "", false);
-    auto module = parseIR(*buf, error, context);
-
-    if (!module)
+    // TODO: do something meaningful here
+    for (Function& F : M.functions())
     {
-        std::string what;
-        llvm::raw_string_ostream os(what);
-        error.print("error after parseIR()", os);
-        std::cerr << what;
+        for (BasicBlock& BB : F)
+        {
+            for (Instruction& I : BB)
+            {
+                if (auto Load = dyn_cast<LoadInst>(&I))
+                {
+                }
+            }
+        }
     }
-
-    return module;
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
-    if (argc < 2)
+    if (argc < 3)
     {
-        std::cerr << "Usage: LLVMCMakeTemplate file.bc\n";
+        puts("Usage: example in.bc out.bc");
+        return EXIT_FAILURE;
+    }
+    auto inFile = argv[1];
+    auto outFile = argv[2];
+
+    // Load module
+    LLVMContext C;
+    SMDiagnostic Err;
+    auto M = parseIRFile(inFile, Err, C);
+    if (!M)
+    {
+        outs() << "Failed to parse IR: " << Err.getMessage() << "\n";
         return EXIT_FAILURE;
     }
 
-    std::ifstream stream(argv[1], std::ios_base::binary);
-    if (!stream.is_open())
+    // Process module
+    try
     {
-        std::cerr << "Failed to load " << argv[1] << '\n';
+        ProcessModule(*M);
+    }
+    catch (const std::exception& x)
+    {
+        outs() << x.what() << "\n";
         return EXIT_FAILURE;
     }
-    std::string bitcode((std::istreambuf_iterator<char>(stream)), (std::istreambuf_iterator<char>()));
 
-    llvm::LLVMContext context;
-    auto module = load_module(context, bitcode);
-    if (module)
-        module->dump();
+    // Write module
+    std::error_code EC;
+    ToolOutputFile Out(outFile, EC, sys::fs::OF_None);
+    WriteBitcodeToFile(*M, Out.os(), true);
+    if (EC)
+    {
+        outs() << "Failed to write IR: " << EC.message() << "\n";
+        return EXIT_FAILURE;
+    }
+    Out.keep();
 
     return EXIT_SUCCESS;
 }
