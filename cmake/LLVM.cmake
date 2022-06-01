@@ -19,7 +19,7 @@ message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 separate_arguments(LLVM_DEFINITIONS)
 
 # Some diagnostics (https://stackoverflow.com/a/17666004/1806760)
-message(STATUS "LLVM libraries: ${LLVM_LIBRARIES}")
+message(STATUS "LLVM libraries: ${LLVM_AVAILABLE_LIBS}")
 message(STATUS "LLVM includes: ${LLVM_INCLUDE_DIRS}")
 message(STATUS "LLVM definitions: ${LLVM_DEFINITIONS}")
 message(STATUS "LLVM tools: ${LLVM_TOOLS_BINARY_DIR}")
@@ -37,6 +37,22 @@ if(LLVM_LINK_LLVM_DYLIB)
     target_link_libraries(LLVM-Wrapper INTERFACE LLVM)
 else()
     target_link_libraries(LLVM-Wrapper INTERFACE ${LLVM_AVAILABLE_LIBS})
+endif()
+
+# In LLVM 10 (and potentially below) there is a full path to diaguids.lib embedded in the installation
+if(WIN32 AND TARGET LLVMDebugInfoPDB)
+    get_target_property(LLVMDebugInfoPDB_LIBS LLVMDebugInfoPDB INTERFACE_LINK_LIBRARIES)
+    foreach(LLVMDebugInfoPDB_LIB ${LLVMDebugInfoPDB_LIBS})
+        if(LLVMDebugInfoPDB_LIB MATCHES "diaguids.lib")
+            list(REMOVE_ITEM LLVMDebugInfoPDB_LIBS "${LLVMDebugInfoPDB_LIB}")
+            list(APPEND LLVMDebugInfoPDB_LIBS "diaguids.lib")
+            break()
+        endif()
+    endforeach()
+    set_target_properties(LLVMDebugInfoPDB PROPERTIES
+        INTERFACE_LINK_LIBRARIES "${LLVMDebugInfoPDB_LIBS}"
+    )
+    unset(LLVMDebugInfoPDB_LIBS)
 endif()
 
 set(CMAKE_FOLDER "${CMAKE_FOLDER_LLVM}")
