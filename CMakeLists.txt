@@ -2,14 +2,12 @@
 cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0091 NEW)
 
-# https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
-# Require out-of-source builds
-if(EXISTS "${PROJECT_BINARY_DIR}/CMakeLists.txt")
-    message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Run cmake -B build instead. Feel free to remove CMakeCache.txt and CMakeFiles.")
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+    message(FATAL_ERROR "In-tree builds are not supported. Run CMake from a separate directory: cmake -B build")
 endif()
 
 # Hunter package configuration
-option(HUNTER_ENABLED "Enable the hunter package manager to automatically download and compile LLVM" ON)
+option(HUNTER_ENABLED "Enable the hunter package manager to automatically download and compile LLVM" OFF)
 if(HUNTER_ENABLED)
     include(cmake/HunterPackages.cmake)
 endif()
@@ -23,8 +21,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# LLVM wrapper
-include(cmake/LLVM.cmake)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+find_package(LLVM-Wrapper REQUIRED)
 
 # MSVC-specific options
 if(MSVC)
@@ -47,6 +46,9 @@ add_executable(example
 )
 target_link_libraries(example PRIVATE
     LLVM-Wrapper
+)
+target_compile_features(example PRIVATE
+    cxx_std_20
 )
 
 # Set the main project as the startup project
