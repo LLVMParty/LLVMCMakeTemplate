@@ -1,23 +1,19 @@
-﻿---
-BasedOnStyle: Microsoft
-AccessModifierOffset: '-4'
+---
+BasedOnStyle: LLVM
 AlignAfterOpenBracket: DontAlign
-AllowAllConstructorInitializersOnNextLine: 'false'
-AllowShortFunctionsOnASingleLine: InlineOnly
+AllowAllArgumentsOnNextLine: false
+AllowAllConstructorInitializersOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortFunctionsOnASingleLine: None
 AllowShortLambdasOnASingleLine: None
-AlwaysBreakTemplateDeclarations: 'Yes'
-BinPackArguments: 'false'
-BinPackParameters: 'false'
-BreakBeforeBraces: Allman
+BinPackArguments: false
+BinPackParameters: false
 BreakConstructorInitializers: BeforeComma
-ColumnLimit: '0'
-ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
-Cpp11BracedListStyle: 'false'
-PointerAlignment: Left
-SortIncludes: 'false'
-SortUsingDeclarations: 'false'
-SpaceAfterTemplateKeyword: 'false'
-TabWidth: '4'
-UseTab: Never
-
-...
+BreakInheritanceList: BeforeComma
+ColumnLimit: 100
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+PackConstructorInitializers: Never
+PenaltyBreakAssignment: 200
+PenaltyReturnTypeOnItsOwnLine: 1000
+SortIncludes: Never
