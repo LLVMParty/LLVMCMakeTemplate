@@ -1,0 +1,20 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  cmake:
+    # Skip building pull requests from the same repository
+    if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
+    runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build
+        shell: bash
+        run: |
+          cmake --preset clang
+          cmake --build build
