@@ -8,7 +8,7 @@ jobs:
     if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) }}
     runs-on: ubuntu-22.04
     container:
-      image: ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.0
+      image: ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.7
     steps:
       - name: Checkout
         uses: actions/checkout@v4

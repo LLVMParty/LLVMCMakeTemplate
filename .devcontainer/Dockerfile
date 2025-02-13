@@ -1,4 +1,4 @@
-FROM ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.0
+FROM ghcr.io/llvmparty/packages/ubuntu:22.04-llvm19.1.7
 
 RUN apt update && apt install -y --no-install-recommends \
     gdb \
